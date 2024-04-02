@@ -2,7 +2,6 @@
 package main
 
 import (
-	"tinpig/config"
 	"tinpig/templates"
 )
 
@@ -13,11 +12,10 @@ import (
 */
 
 func main() {
-	cfg := config.LoadConfig()
-	template := templates.GetTemplateChoice(cfg)
-	templates.DisplayChoice(template)
-	templates.GetProjectDir(template, cfg)
-	templates.DefineTokens(template)
-	templates.CreateProject(template)
-	templates.ShowSuccess(template)
+	parser := templates.NewTemplateParser()
+	parser.GetTemplateChoice()
+	parser.GetProjectDir()
+	parser.DefineTokens()
+	parser.CreateProject()
+	parser.ShowSuccess()
 }

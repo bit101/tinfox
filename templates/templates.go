@@ -33,12 +33,26 @@ type Template struct {
 	TokenValues       map[string]string
 }
 
+// TemplateParser reads and parses a template.
+type TemplateParser struct {
+	template *Template
+	cfg      config.Config
+}
+
+// NewTemplateParser creates a new TemplateParser.
+func NewTemplateParser() *TemplateParser {
+	cfg := config.LoadConfig()
+	return &TemplateParser{
+		cfg: cfg,
+	}
+}
+
 // GetTemplateChoice shows the template ui and returns the choice.
-func GetTemplateChoice(cfg config.Config) *Template {
-	list := GetTemplateList(cfg)
+func (t *TemplateParser) GetTemplateChoice() {
+	list := t.GetTemplateList(t.cfg)
 	if len(list) == 0 {
 		ansi.Println(ansi.BoldRed, "No templates found.")
-		fmt.Printf("  Add some templates in %q.\n", cfg.TemplatesDir)
+		fmt.Printf("  Add some templates in %q.\n", t.cfg.TemplatesDir)
 		fmt.Println("  Or adjust the `templatesDir` location in the config file.")
 		os.Exit(1)
 	}
@@ -47,25 +61,37 @@ func GetTemplateChoice(cfg config.Config) *Template {
 		nameList = append(nameList, template.Name)
 	}
 	index, _ := clui.MultiChoice(nameList, "Choose a project type:")
-	return list[index]
+	t.template = list[index]
+	t.DisplayChoice()
+}
+
+// DisplayChoice shows info about the template the user has chosen.
+func (t *TemplateParser) DisplayChoice() {
+	fmt.Println()
+	ansi.Println(ansi.BoldGreen, "Project Info:")
+	ansi.Print(ansi.Yellow, "Project: ")
+	fmt.Println(t.template.Name)
+	ansi.Print(ansi.Yellow, "Description: ")
+	fmt.Println(t.template.Description)
+	fmt.Println()
 }
 
 // GetTemplateList returns the list of available templates
-func GetTemplateList(cfg config.Config) []*Template {
+func (t *TemplateParser) GetTemplateList(cfg config.Config) []*Template {
 	dirList, err := os.ReadDir(cfg.TemplatesDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 	list := []*Template{}
 	for _, d := range dirList {
-		template := LoadTemplate(d.Name(), cfg)
+		template := t.LoadTemplate(d.Name(), cfg)
 		list = append(list, template)
 	}
 	return list
 }
 
 // LoadTemplate loads, parses and returns the template.
-func LoadTemplate(name string, cfg config.Config) *Template {
+func (t *TemplateParser) LoadTemplate(name string, cfg config.Config) *Template {
 	templateSourceDir := filepath.Join(cfg.TemplatesDir, name)
 	templateStr, err := os.ReadFile(filepath.Join(templateSourceDir, "tinpig.json"))
 	if err != nil {
@@ -77,25 +103,14 @@ func LoadTemplate(name string, cfg config.Config) *Template {
 	return &template
 }
 
-// DisplayChoice shows info about the template the user has chosen.
-func DisplayChoice(template *Template) {
-	fmt.Println()
-	ansi.Println(ansi.BoldGreen, "Project Info:")
-	ansi.Print(ansi.Yellow, "Project: ")
-	fmt.Println(template.Name)
-	ansi.Print(ansi.Yellow, "Description: ")
-	fmt.Println(template.Description)
-	fmt.Println()
-}
-
 // DefineTokens gets values for all the tokens and stores the values in the template.
-func DefineTokens(template *Template) {
-	if len(template.Tokens) == 0 {
+func (t *TemplateParser) DefineTokens() {
+	if len(t.template.Tokens) == 0 {
 		return
 	}
 	ansi.Println(ansi.BoldGreen, "Define values for any tokens:")
 	tokenValues := map[string]string{}
-	for _, token := range template.Tokens {
+	for _, token := range t.template.Tokens {
 		if token.Default == "" {
 			value := clui.ReadString(fmt.Sprintf("Value for %q:", token.Name))
 			tokenValues[token.Name] = value
@@ -104,14 +119,14 @@ func DefineTokens(template *Template) {
 			tokenValues[token.Name] = value
 		}
 	}
-	tokenValues["TINPIG_PROJECT_PATH"] = template.ProjectDir
-	tokenValues["TINPIG_PROJECT_DIR"] = filepath.Base(template.ProjectDir)
-	template.TokenValues = tokenValues
+	tokenValues["TINPIG_PROJECT_PATH"] = t.template.ProjectDir
+	tokenValues["TINPIG_PROJECT_DIR"] = filepath.Base(t.template.ProjectDir)
+	t.template.TokenValues = tokenValues
 	fmt.Println()
 }
 
 // GetProjectDir requests the project directory from the user and stores it in the template.
-func GetProjectDir(template *Template, cfg config.Config) {
+func (t *TemplateParser) GetProjectDir() {
 	var dir string
 	ok := false
 	for !ok {
@@ -128,7 +143,7 @@ func GetProjectDir(template *Template, cfg config.Config) {
 		}
 
 		// bad path chars?
-		for _, c := range cfg.InvalidPathChars {
+		for _, c := range t.cfg.InvalidPathChars {
 			if strings.Index(dir, string(c)) > -1 {
 				ok = false
 				ansi.Printf(ansi.BoldRed, "Directory name cannot contain %q. Try again.\n\n", c)
@@ -156,42 +171,42 @@ func GetProjectDir(template *Template, cfg config.Config) {
 	}
 
 	absDir, _ := filepath.Abs(dir)
-	template.ProjectDir = absDir
+	t.template.ProjectDir = absDir
 	fmt.Println()
 }
 
 // ShowSuccess shows the success message and any post message.
-func ShowSuccess(template *Template) {
-	ansi.Printf(ansi.BoldGreen, "Success creating the %q project!\n", template.Name)
+func (t *TemplateParser) ShowSuccess() {
+	ansi.Printf(ansi.BoldGreen, "Success creating the %q project!\n", t.template.Name)
 	ansi.Print(ansi.Yellow, "Location: ")
-	fmt.Println(template.ProjectDir)
-	if template.PostMessage != "" {
+	fmt.Println(t.template.ProjectDir)
+	if t.template.PostMessage != "" {
 		ansi.Print(ansi.Yellow, "Instructions: ")
-		fmt.Println(template.PostMessage)
+		fmt.Println(t.template.PostMessage)
 	}
 	fmt.Println()
 }
 
 // CreateProject creates the project dir, copies the files and updates the tokens.
-func CreateProject(template *Template) {
-	templateFiles, err := os.ReadDir(template.TemplateSourceDir)
+func (t *TemplateParser) CreateProject() {
+	templateFiles, err := os.ReadDir(t.template.TemplateSourceDir)
 	if err != nil {
 		log.Fatal(err)
 	}
-	os.Mkdir(template.ProjectDir, 0755)
+	os.Mkdir(t.template.ProjectDir, 0755)
 	for _, file := range templateFiles {
 		if file.Name() != "tinpig.json" {
-			if !slices.Contains(template.Ignore, file.Name()) {
-				copyFile(file, template.TemplateSourceDir, template.ProjectDir, template)
+			if !slices.Contains(t.template.Ignore, file.Name()) {
+				t.copyFile(file, t.template.TemplateSourceDir, t.template.ProjectDir)
 			}
 		}
 	}
 }
 
-func copyFile(file os.DirEntry, srcDir, dstDir string, template *Template) {
+func (t *TemplateParser) copyFile(file os.DirEntry, srcDir, dstDir string) {
 	srcFilePath := filepath.Join(srcDir, file.Name())
 	dstFilePath := filepath.Join(dstDir, file.Name())
-	dstFilePath = replaceDirTokens(dstFilePath, template.TokenValues)
+	dstFilePath = replaceDirTokens(dstFilePath, t.template.TokenValues)
 
 	fileInfo, err := file.Info()
 	if err != nil {
@@ -206,14 +221,14 @@ func copyFile(file os.DirEntry, srcDir, dstDir string, template *Template) {
 			log.Fatal(err)
 		}
 		for _, subFile := range files {
-			copyFile(subFile, srcFilePath, dstFilePath, template)
+			t.copyFile(subFile, srcFilePath, dstFilePath)
 		}
 	} else {
 		fileData, err := os.ReadFile(srcFilePath)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fileData = replaceFileTokens(fileData, template.TokenValues)
+		fileData = replaceFileTokens(fileData, t.template.TokenValues)
 		os.WriteFile(dstFilePath, fileData, mode)
 	}
 }
