@@ -1,3 +1,3 @@
 # tinpig
 
-A rewrite of github.com/bit101/tinpig in Go.
+A rewrite of https://github.com/bit101/tinpig in Go.
