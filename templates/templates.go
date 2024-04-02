@@ -39,7 +39,18 @@ func GetTemplateList(cfg config.Config) []string {
 	}
 	list := []string{}
 	for _, d := range dirList {
-		list = append(list, d.Name())
+		path := filepath.Join(cfg.TemplatesDir, d.Name(), "tinpig.json")
+		jsonData, err := os.ReadFile(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var template Template
+		err = json.Unmarshal(jsonData, &template)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		list = append(list, template.Name)
 	}
 	return list
 }
