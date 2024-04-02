@@ -7,16 +7,14 @@ import (
 )
 
 /*
-- display project name instead of folder name
-- ignore
+- make modules into structs with methods
 - cli standard stuff
 - colors in config
 */
 
 func main() {
 	cfg := config.LoadConfig()
-	choice := templates.GetTemplateChoice(cfg)
-	template := templates.LoadTemplate(choice, cfg)
+	template := templates.GetTemplateChoice(cfg)
 	templates.DisplayChoice(template)
 	templates.GetProjectDir(template, cfg)
 	templates.DefineTokens(template)

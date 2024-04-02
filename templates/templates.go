@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"tinpig/clui"
 	"tinpig/config"
@@ -22,41 +23,18 @@ type Token struct {
 
 // Template is a struct holding template data.
 type Template struct {
-	Name              string  `json:"name"`
-	Description       string  `json:"description"`
-	Tokens            []Token `json:"tokens"`
-	PostMessage       string  `json:"postMessage"`
+	Name              string   `json:"name"`
+	Description       string   `json:"description"`
+	Tokens            []Token  `json:"tokens"`
+	PostMessage       string   `json:"postMessage"`
+	Ignore            []string `json:"ignore"`
 	TemplateSourceDir string
 	ProjectDir        string
 	TokenValues       map[string]string
 }
 
-// GetTemplateList returns the list of available templates
-func GetTemplateList(cfg config.Config) []string {
-	dirList, err := os.ReadDir(cfg.TemplatesDir)
-	if err != nil {
-		log.Fatal(err)
-	}
-	list := []string{}
-	for _, d := range dirList {
-		path := filepath.Join(cfg.TemplatesDir, d.Name(), "tinpig.json")
-		jsonData, err := os.ReadFile(path)
-		if err != nil {
-			log.Fatal(err)
-		}
-		var template Template
-		err = json.Unmarshal(jsonData, &template)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		list = append(list, template.Name)
-	}
-	return list
-}
-
 // GetTemplateChoice shows the template ui and returns the choice.
-func GetTemplateChoice(cfg config.Config) string {
+func GetTemplateChoice(cfg config.Config) *Template {
 	list := GetTemplateList(cfg)
 	if len(list) == 0 {
 		ansi.Println(ansi.BoldRed, "No templates found.")
@@ -64,8 +42,26 @@ func GetTemplateChoice(cfg config.Config) string {
 		fmt.Println("  Or adjust the `templatesDir` location in the config file.")
 		os.Exit(1)
 	}
-	_, choiceStr := clui.MultiChoice(list, "Choose a project type:")
-	return choiceStr
+	nameList := []string{}
+	for _, template := range list {
+		nameList = append(nameList, template.Name)
+	}
+	index, _ := clui.MultiChoice(nameList, "Choose a project type:")
+	return list[index]
+}
+
+// GetTemplateList returns the list of available templates
+func GetTemplateList(cfg config.Config) []*Template {
+	dirList, err := os.ReadDir(cfg.TemplatesDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	list := []*Template{}
+	for _, d := range dirList {
+		template := LoadTemplate(d.Name(), cfg)
+		list = append(list, template)
+	}
+	return list
 }
 
 // LoadTemplate loads, parses and returns the template.
@@ -185,7 +181,9 @@ func CreateProject(template *Template) {
 	os.Mkdir(template.ProjectDir, 0755)
 	for _, file := range templateFiles {
 		if file.Name() != "tinpig.json" {
-			copyFile(file, template.TemplateSourceDir, template.ProjectDir, template)
+			if !slices.Contains(template.Ignore, file.Name()) {
+				copyFile(file, template.TemplateSourceDir, template.ProjectDir, template)
+			}
 		}
 	}
 }

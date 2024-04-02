@@ -62,7 +62,7 @@ func MultiChoice(choices []string, instructions string) (int, string) {
 	result := choices[choice-1]
 	ansi.Restore()
 	ansi.ClearToEnd()
-	return choice, result
+	return choice - 1, result
 }
 
 func outputMultiChoice(choices []string, instructions, errStr string) {
