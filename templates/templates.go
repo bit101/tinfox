@@ -47,6 +47,15 @@ func NewTemplateParser() *TemplateParser {
 	}
 }
 
+// LoadAndParse loads the template list, gets the user's choice, dir, tokens values and creates the project.
+func (t *TemplateParser) LoadAndParse() {
+	t.GetTemplateChoice()
+	t.GetProjectDir()
+	t.DefineTokens()
+	t.CreateProject()
+	t.ShowSuccess()
+}
+
 // GetTemplateChoice shows the template ui and returns the choice.
 func (t *TemplateParser) GetTemplateChoice() {
 	list := t.GetTemplateList(t.cfg)
