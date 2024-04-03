@@ -69,14 +69,14 @@ func outputMultiChoice(choices []string, instructions, errStr string) {
 	ansi.Restore()
 	ansi.ClearToEnd()
 	if errStr != "" {
-		ansi.Print(ansi.BoldRed, errStr)
+		ansi.Print(DefaultTheme.Errors, errStr)
 	}
-	ansi.Println(ansi.BoldGreen, instructions, "\r")
+	ansi.Println(DefaultTheme.Headers, instructions, "\r")
 
 	for i := 0; i < len(choices); i++ {
-		ansi.Printf(ansi.Default, "%d. %s\r\n", i+1, choices[i])
+		fmt.Printf("%d. %s\r\n", i+1, choices[i])
 	}
-	ansi.Println(ansi.Default, "q. Quit")
-	ansi.Print(ansi.Yellow, "Choice: ")
+	fmt.Println("q. Quit")
+	ansi.Print(DefaultTheme.Instructions, "Choice: ")
 
 }

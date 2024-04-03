@@ -8,15 +8,17 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-
-	"github.com/bit101/go-ansi"
 )
 
 // Config holds the configuration values.
 type Config struct {
-	TemplatesDir     string `json:"templatesDir"`
-	InvalidPathChars string `json:"invalidPathChars"`
-	ConfigDir        string
+	TemplatesDir      string `json:"templatesDir"`
+	InvalidPathChars  string `json:"invalidPathChars"`
+	HeaderColor       string `json:"headerColor"`
+	InstructionColor  string `json:"instructionColor"`
+	ErrorColor        string `json:"errorColor"`
+	DefaultValueColor string `json:"defaultValueColor"`
+	ConfigDir         string `json:"-"`
 }
 
 // LoadConfig loads, parses and returns the app configuration.
@@ -41,7 +43,7 @@ func LoadConfig() Config {
 	err = json.Unmarshal(configStr, &configuration)
 	checkError(err, "could not parse config.")
 	if initializedConfig {
-		displayConfigSetupMessage(configuration)
+		displayConfigSetupMessage(configDir)
 	}
 	return configuration
 }
@@ -53,8 +55,12 @@ func initConfig(configDir string) {
 	var cfg Config
 	cfg.InvalidPathChars = "‘“!#$%&+^<=>` "
 	cfg.TemplatesDir = filepath.Join(configDir, "tinpig", "templates")
+	cfg.HeaderColor = "BoldGreen"
+	cfg.InstructionColor = "Yellow"
+	cfg.ErrorColor = "BoldRed"
+	cfg.DefaultValueColor = "Blue"
 
-	str, err := json.Marshal(cfg)
+	str, err := json.MarshalIndent(cfg, "", "  ")
 	checkError(err, "could not create new config.")
 
 	os.WriteFile(filepath.Join(configDir, "tinpig", "config"), str, 0755)
@@ -80,12 +86,12 @@ func makeSampleTemplate(cfg Config) {
 	checkError(err, "could not create sample template.")
 }
 
-func displayConfigSetupMessage(cfg Config) {
-	ansi.Println(ansi.BoldGreen, "Config Setup")
-	ansi.Println(ansi.Yellow, "It looks like this is the first time you're using the app.")
-	ansi.Printf(ansi.Yellow, "We set up a configuration dir at %q.\n", filepath.Join(cfg.ConfigDir, "tinpig"))
-	ansi.Println(ansi.Yellow, "This is also where you can store your templates. We created a sample template to get you started.")
-	ansi.Println(ansi.Yellow, "You can change this location if you'd like by editing the config file.")
+func displayConfigSetupMessage(configDir string) {
+	fmt.Println("It looks like this is the first time you're using tinpig.")
+	fmt.Printf("We set up a configuration dir at %q.\n", filepath.Join(configDir, "tinpig"))
+	fmt.Printf("Add your templates to %q.\n", filepath.Join(configDir, "tinpig", "templates"))
+	fmt.Println("You can change this location if you'd like by editing the config file.")
+	fmt.Println("We threw in a sample HTML template there to get you started.")
 	fmt.Println()
 }
 

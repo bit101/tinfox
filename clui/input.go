@@ -11,9 +11,9 @@ import (
 
 // ReadStringDefault displays a prompt and collects input.
 func ReadStringDefault(prompt, def string) string {
-	ansi.Printf(ansi.Yellow, "%s ", prompt)
+	ansi.Printf(DefaultTheme.Instructions, "%s ", prompt)
 	if def != "" {
-		ansi.Printf(ansi.Blue, "(%s) ", def)
+		ansi.Printf(DefaultTheme.Defaults, "(%s) ", def)
 	}
 	reader := bufio.NewReader(os.Stdin)
 	str, _ := reader.ReadString('\n')
@@ -26,7 +26,7 @@ func ReadStringDefault(prompt, def string) string {
 
 // ReadString displays a prompt and collects input.
 func ReadString(prompt string) string {
-	ansi.Printf(ansi.Yellow, "%s ", prompt)
+	ansi.Printf(DefaultTheme.Instructions, "%s ", prompt)
 	reader := bufio.NewReader(os.Stdin)
 	str, err := reader.ReadString('\n')
 	if err != nil {

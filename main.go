@@ -7,7 +7,6 @@ import (
 
 /*
 - cli standard stuff
-- colors in config
 */
 
 func main() {

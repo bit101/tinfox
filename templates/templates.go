@@ -49,6 +49,7 @@ func NewTemplateParser() *TemplateParser {
 
 // LoadAndParse loads the template list, gets the user's choice, dir, tokens values and creates the project.
 func (t *TemplateParser) LoadAndParse() {
+	clui.SetTheme(t.cfg.HeaderColor, t.cfg.InstructionColor, t.cfg.ErrorColor, t.cfg.DefaultValueColor)
 	t.GetTemplateChoice()
 	t.GetProjectDir()
 	t.DefineTokens()
@@ -60,7 +61,7 @@ func (t *TemplateParser) LoadAndParse() {
 func (t *TemplateParser) GetTemplateChoice() {
 	list := t.GetTemplateList(t.cfg)
 	if len(list) == 0 {
-		ansi.Println(ansi.BoldRed, "No templates found.")
+		ansi.Println(clui.DefaultTheme.Errors, "No templates found.")
 		fmt.Printf("  Add some templates in %q.\n", t.cfg.TemplatesDir)
 		fmt.Println("  Or adjust the `templatesDir` location in the config file.")
 		os.Exit(1)
@@ -77,10 +78,10 @@ func (t *TemplateParser) GetTemplateChoice() {
 // DisplayChoice shows info about the template the user has chosen.
 func (t *TemplateParser) DisplayChoice() {
 	fmt.Println()
-	ansi.Println(ansi.BoldGreen, "Project Info:")
-	ansi.Print(ansi.Yellow, "Project: ")
+	ansi.Println(clui.DefaultTheme.Headers, "Project Info:")
+	ansi.Print(clui.DefaultTheme.Instructions, "Project: ")
 	fmt.Println(t.template.Name)
-	ansi.Print(ansi.Yellow, "Description: ")
+	ansi.Print(clui.DefaultTheme.Instructions, "Description: ")
 	fmt.Println(t.template.Description)
 	fmt.Println()
 }
@@ -117,7 +118,7 @@ func (t *TemplateParser) DefineTokens() {
 	if len(t.template.Tokens) == 0 {
 		return
 	}
-	ansi.Println(ansi.BoldGreen, "Define values for any tokens:")
+	ansi.Println(clui.DefaultTheme.Headers, "Define values for any tokens:")
 	tokenValues := map[string]string{}
 	for _, token := range t.template.Tokens {
 		if token.Default == "" {
@@ -140,13 +141,13 @@ func (t *TemplateParser) GetProjectDir() {
 	ok := false
 	for !ok {
 		ok = true
-		ansi.Println(ansi.BoldGreen, "Project Location: ")
+		ansi.Println(clui.DefaultTheme.Headers, "Project Location: ")
 		dir = clui.ReadString("Directory to create project in:")
 
 		// is it an empty string?
 		if dir == "" {
 			ok = false
-			ansi.Println(ansi.BoldRed, "Directory name cannot be empty.")
+			ansi.Println(clui.DefaultTheme.Errors, "Directory name cannot be empty.")
 			fmt.Println()
 			continue
 		}
@@ -155,14 +156,14 @@ func (t *TemplateParser) GetProjectDir() {
 		for _, c := range t.cfg.InvalidPathChars {
 			if strings.Index(dir, string(c)) > -1 {
 				ok = false
-				ansi.Printf(ansi.BoldRed, "Directory name cannot contain %q. Try again.\n\n", c)
+				ansi.Printf(clui.DefaultTheme.Errors, "Directory name cannot contain %q. Try again.\n\n", c)
 				continue
 			}
 		}
 
 		// let's make sure that's what you wanted
 		absDir, _ := filepath.Abs(dir)
-		ansi.Print(ansi.Yellow, "You entered: ")
+		ansi.Print(clui.DefaultTheme.Instructions, "You entered: ")
 		fmt.Println(absDir)
 		confirm := clui.ReadString("Is that correct? [y/n]")
 		if strings.ToLower(confirm) != "y" {
@@ -173,7 +174,7 @@ func (t *TemplateParser) GetProjectDir() {
 		// does this path already exist?
 		_, err := os.Stat(dir)
 		if err == nil {
-			ansi.Printf(ansi.BoldRed, "Something already exists at location %q. Try again.\n\n", dir)
+			ansi.Printf(clui.DefaultTheme.Errors, "Something already exists at location %q. Try again.\n\n", dir)
 			ok = false
 			continue
 		}
@@ -186,11 +187,11 @@ func (t *TemplateParser) GetProjectDir() {
 
 // ShowSuccess shows the success message and any post message.
 func (t *TemplateParser) ShowSuccess() {
-	ansi.Printf(ansi.BoldGreen, "Success creating the %q project!\n", t.template.Name)
-	ansi.Print(ansi.Yellow, "Location: ")
+	ansi.Printf(clui.DefaultTheme.Headers, "Success creating the %q project!\n", t.template.Name)
+	ansi.Print(clui.DefaultTheme.Instructions, "Location: ")
 	fmt.Println(t.template.ProjectDir)
 	if t.template.PostMessage != "" {
-		ansi.Print(ansi.Yellow, "Instructions: ")
+		ansi.Print(clui.DefaultTheme.Instructions, "Instructions: ")
 		fmt.Println(t.template.PostMessage)
 	}
 	fmt.Println()
