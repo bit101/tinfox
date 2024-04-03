@@ -55,10 +55,10 @@ func initConfig(configDir string) {
 	var cfg Config
 	cfg.InvalidPathChars = "‘“!#$%&+^<=>` "
 	cfg.TemplatesDir = filepath.Join(configDir, "tinpig", "templates")
-	cfg.HeaderColor = "BoldGreen"
-	cfg.InstructionColor = "Yellow"
-	cfg.ErrorColor = "BoldRed"
-	cfg.DefaultValueColor = "Blue"
+	cfg.HeaderColor = "boldgreen"
+	cfg.InstructionColor = "yellow"
+	cfg.ErrorColor = "boldred"
+	cfg.DefaultValueColor = "blue"
 
 	str, err := json.MarshalIndent(cfg, "", "  ")
 	checkError(err, "could not create new config.")

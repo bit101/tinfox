@@ -6,6 +6,8 @@ import (
 )
 
 /*
+- DefaultTheme => ActiveTheme
+- Clean up theme element names
 - cli standard stuff
 */
 

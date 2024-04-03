@@ -2,6 +2,8 @@
 package clui
 
 import (
+	"strings"
+
 	"github.com/bit101/go-ansi"
 )
 
@@ -17,41 +19,36 @@ type Theme struct {
 var ColorMap = map[string]ansi.AnsiColor{}
 
 func init() {
-	ColorMap["Black"] = ansi.Black
-	ColorMap["BoldBlack"] = ansi.BoldBlack
-	ColorMap["Red"] = ansi.Red
-	ColorMap["BoldRed"] = ansi.BoldRed
-	ColorMap["Green"] = ansi.Green
-	ColorMap["BoldGreen"] = ansi.BoldGreen
-	ColorMap["Yellow"] = ansi.Yellow
-	ColorMap["BoldYellow"] = ansi.BoldYellow
-	ColorMap["Blue"] = ansi.Blue
-	ColorMap["BoldBlue"] = ansi.BoldBlue
-	ColorMap["Purple"] = ansi.Purple
-	ColorMap["BoldPurple"] = ansi.BoldPurple
-	ColorMap["Cyan"] = ansi.Cyan
-	ColorMap["BoldCyan"] = ansi.BoldCyan
-	ColorMap["White"] = ansi.White
-	ColorMap["BoldWhite"] = ansi.BoldWhite
+	ColorMap["black"] = ansi.Black
+	ColorMap["boldblack"] = ansi.BoldBlack
+	ColorMap["red"] = ansi.Red
+	ColorMap["boldred"] = ansi.BoldRed
+	ColorMap["green"] = ansi.Green
+	ColorMap["boldgreen"] = ansi.BoldGreen
+	ColorMap["yellow"] = ansi.Yellow
+	ColorMap["boldyellow"] = ansi.BoldYellow
+	ColorMap["blue"] = ansi.Blue
+	ColorMap["boldblue"] = ansi.BoldBlue
+	ColorMap["purple"] = ansi.Purple
+	ColorMap["boldpurple"] = ansi.BoldPurple
+	ColorMap["cyan"] = ansi.Cyan
+	ColorMap["boldcyan"] = ansi.BoldCyan
+	ColorMap["white"] = ansi.White
+	ColorMap["boldwhite"] = ansi.BoldWhite
 }
 
 // DefaultTheme is the default theme.
-var DefaultTheme = NewTheme(ansi.BoldGreen, ansi.Yellow, ansi.BoldRed, ansi.Blue)
-
-// NewTheme creates a new theme with the given colors.
-func NewTheme(headers, instructions, errors, defaults ansi.AnsiColor) Theme {
-	return Theme{
-		headers,
-		instructions,
-		errors,
-		defaults,
-	}
+var DefaultTheme = Theme{
+	Headers:      ansi.BoldGreen,
+	Instructions: ansi.Yellow,
+	Errors:       ansi.BoldRed,
+	Defaults:     ansi.Blue,
 }
 
 // SetTheme sets the theme colors from the config.
 func SetTheme(headers, instructions, errors, defaults string) {
-	DefaultTheme.Headers = ColorMap[headers]
-	DefaultTheme.Instructions = ColorMap[instructions]
-	DefaultTheme.Errors = ColorMap[errors]
-	DefaultTheme.Defaults = ColorMap[defaults]
+	DefaultTheme.Headers = ColorMap[strings.ToLower(headers)]
+	DefaultTheme.Instructions = ColorMap[strings.ToLower(instructions)]
+	DefaultTheme.Errors = ColorMap[strings.ToLower(errors)]
+	DefaultTheme.Defaults = ColorMap[strings.ToLower(defaults)]
 }
