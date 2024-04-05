@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"tinpig/theme"
 
 	"github.com/bit101/go-ansi"
 )
@@ -69,14 +70,14 @@ func outputMultiChoice(choices []string, instructions, errStr string) {
 	ansi.Restore()
 	ansi.ClearToEnd()
 	if errStr != "" {
-		ansi.Print(DefaultTheme.Errors, errStr)
+		ansi.Print(theme.Error, errStr)
 	}
-	ansi.Println(DefaultTheme.Headers, instructions, "\r")
+	ansi.Println(theme.Header, instructions, "\r")
 
 	for i := 0; i < len(choices); i++ {
 		fmt.Printf("%d. %s\r\n", i+1, choices[i])
 	}
 	fmt.Println("q. Quit")
-	ansi.Print(DefaultTheme.Instructions, "Choice: ")
+	ansi.Print(theme.Instruction, "Choice: ")
 
 }

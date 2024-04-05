@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"tinpig/theme"
 )
 
 // Config holds the configuration values.
@@ -45,6 +46,13 @@ func LoadConfig() Config {
 	if initializedConfig {
 		displayConfigSetupMessage(configDir)
 	}
+
+	theme.SetTheme(
+		configuration.HeaderColor,
+		configuration.InstructionColor,
+		configuration.ErrorColor,
+		configuration.DefaultValueColor,
+	)
 	return configuration
 }
 

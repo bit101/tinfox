@@ -5,15 +5,16 @@ import (
 	"bufio"
 	"os"
 	"strings"
+	"tinpig/theme"
 
 	"github.com/bit101/go-ansi"
 )
 
 // ReadStringDefault displays a prompt and collects input.
 func ReadStringDefault(prompt, def string) string {
-	ansi.Printf(DefaultTheme.Instructions, "%s ", prompt)
+	ansi.Printf(theme.Instruction, "%s ", prompt)
 	if def != "" {
-		ansi.Printf(DefaultTheme.Defaults, "(%s) ", def)
+		ansi.Printf(theme.Default, "(%s) ", def)
 	}
 	reader := bufio.NewReader(os.Stdin)
 	str, _ := reader.ReadString('\n')
@@ -26,7 +27,7 @@ func ReadStringDefault(prompt, def string) string {
 
 // ReadString displays a prompt and collects input.
 func ReadString(prompt string) string {
-	ansi.Printf(DefaultTheme.Instructions, "%s ", prompt)
+	ansi.Printf(theme.Instruction, "%s ", prompt)
 	reader := bufio.NewReader(os.Stdin)
 	str, err := reader.ReadString('\n')
 	if err != nil {

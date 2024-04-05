@@ -11,6 +11,7 @@ import (
 	"strings"
 	"tinpig/clui"
 	"tinpig/config"
+	"tinpig/theme"
 
 	"github.com/bit101/go-ansi"
 )
@@ -49,7 +50,6 @@ func NewTemplateParser() *TemplateParser {
 
 // LoadAndParse loads the template list, gets the user's choice, dir, tokens values and creates the project.
 func (t *TemplateParser) LoadAndParse() {
-	clui.SetTheme(t.cfg.HeaderColor, t.cfg.InstructionColor, t.cfg.ErrorColor, t.cfg.DefaultValueColor)
 	t.GetTemplateChoice()
 	t.GetProjectDir()
 	t.DefineTokens()
@@ -61,7 +61,7 @@ func (t *TemplateParser) LoadAndParse() {
 func (t *TemplateParser) GetTemplateChoice() {
 	list := t.GetTemplateList(t.cfg)
 	if len(list) == 0 {
-		ansi.Println(clui.DefaultTheme.Errors, "No templates found.")
+		ansi.Println(theme.Error, "No templates found.")
 		fmt.Printf("  Add some templates in %q.\n", t.cfg.TemplatesDir)
 		fmt.Println("  Or adjust the `templatesDir` location in the config file.")
 		os.Exit(1)
@@ -78,10 +78,10 @@ func (t *TemplateParser) GetTemplateChoice() {
 // DisplayChoice shows info about the template the user has chosen.
 func (t *TemplateParser) DisplayChoice() {
 	fmt.Println()
-	ansi.Println(clui.DefaultTheme.Headers, "Project Info:")
-	ansi.Print(clui.DefaultTheme.Instructions, "Project: ")
+	ansi.Println(theme.Header, "Project Info:")
+	ansi.Print(theme.Instruction, "Project: ")
 	fmt.Println(t.template.Name)
-	ansi.Print(clui.DefaultTheme.Instructions, "Description: ")
+	ansi.Print(theme.Instruction, "Description: ")
 	fmt.Println(t.template.Description)
 	fmt.Println()
 }
@@ -118,7 +118,7 @@ func (t *TemplateParser) DefineTokens() {
 	if len(t.template.Tokens) == 0 {
 		return
 	}
-	ansi.Println(clui.DefaultTheme.Headers, "Define values for any tokens:")
+	ansi.Println(theme.Header, "Define values for any tokens:")
 	tokenValues := map[string]string{}
 	for _, token := range t.template.Tokens {
 		if token.Default == "" {
@@ -141,13 +141,13 @@ func (t *TemplateParser) GetProjectDir() {
 	ok := false
 	for !ok {
 		ok = true
-		ansi.Println(clui.DefaultTheme.Headers, "Project Location: ")
+		ansi.Println(theme.Header, "Project Location: ")
 		dir = clui.ReadString("Directory to create project in:")
 
 		// is it an empty string?
 		if dir == "" {
 			ok = false
-			ansi.Println(clui.DefaultTheme.Errors, "Directory name cannot be empty.")
+			ansi.Println(theme.Error, "Directory name cannot be empty.")
 			fmt.Println()
 			continue
 		}
@@ -156,14 +156,14 @@ func (t *TemplateParser) GetProjectDir() {
 		for _, c := range t.cfg.InvalidPathChars {
 			if strings.Index(dir, string(c)) > -1 {
 				ok = false
-				ansi.Printf(clui.DefaultTheme.Errors, "Directory name cannot contain %q. Try again.\n\n", c)
+				ansi.Printf(theme.Error, "Directory name cannot contain %q. Try again.\n\n", c)
 				continue
 			}
 		}
 
 		// let's make sure that's what you wanted
 		absDir, _ := filepath.Abs(dir)
-		ansi.Print(clui.DefaultTheme.Instructions, "You entered: ")
+		ansi.Print(theme.Instruction, "You entered: ")
 		fmt.Println(absDir)
 		confirm := clui.ReadString("Is that correct? [y/n]")
 		if strings.ToLower(confirm) != "y" {
@@ -174,7 +174,7 @@ func (t *TemplateParser) GetProjectDir() {
 		// does this path already exist?
 		_, err := os.Stat(dir)
 		if err == nil {
-			ansi.Printf(clui.DefaultTheme.Errors, "Something already exists at location %q. Try again.\n\n", dir)
+			ansi.Printf(theme.Error, "Something already exists at location %q. Try again.\n\n", dir)
 			ok = false
 			continue
 		}
@@ -187,11 +187,11 @@ func (t *TemplateParser) GetProjectDir() {
 
 // ShowSuccess shows the success message and any post message.
 func (t *TemplateParser) ShowSuccess() {
-	ansi.Printf(clui.DefaultTheme.Headers, "Success creating the %q project!\n", t.template.Name)
-	ansi.Print(clui.DefaultTheme.Instructions, "Location: ")
+	ansi.Printf(theme.Header, "Success creating the %q project!\n", t.template.Name)
+	ansi.Print(theme.Instruction, "Location: ")
 	fmt.Println(t.template.ProjectDir)
 	if t.template.PostMessage != "" {
-		ansi.Print(clui.DefaultTheme.Instructions, "Instructions: ")
+		ansi.Print(theme.Instruction, "Instructions: ")
 		fmt.Println(t.template.PostMessage)
 	}
 	fmt.Println()

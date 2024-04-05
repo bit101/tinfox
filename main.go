@@ -6,9 +6,8 @@ import (
 )
 
 /*
-- DefaultTheme => ActiveTheme
-- Clean up theme element names
-- cli standard stuff
+- cobra
+- ansi.Printf(theme.Header, ...) -> theme.Headerf(...), etc.
 */
 
 func main() {

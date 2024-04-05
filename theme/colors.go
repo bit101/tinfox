@@ -1,5 +1,5 @@
-// Package clui has command line ui functions
-package clui
+// Package theme controls colors
+package theme
 
 import (
 	"strings"
@@ -7,13 +7,13 @@ import (
 	"github.com/bit101/go-ansi"
 )
 
-// Theme defines the colors used to print various elements.
-type Theme struct {
-	Headers      ansi.AnsiColor
-	Instructions ansi.AnsiColor
-	Errors       ansi.AnsiColor
-	Defaults     ansi.AnsiColor
-}
+// Theme elements that define the colors used to print various elements.
+var (
+	Header      ansi.AnsiColor
+	Instruction ansi.AnsiColor
+	Error       ansi.AnsiColor
+	Default     ansi.AnsiColor
+)
 
 // ColorMap helps convert strings to ansi colors.
 var ColorMap = map[string]ansi.AnsiColor{}
@@ -37,18 +37,10 @@ func init() {
 	ColorMap["boldwhite"] = ansi.BoldWhite
 }
 
-// DefaultTheme is the default theme.
-var DefaultTheme = Theme{
-	Headers:      ansi.BoldGreen,
-	Instructions: ansi.Yellow,
-	Errors:       ansi.BoldRed,
-	Defaults:     ansi.Blue,
-}
-
 // SetTheme sets the theme colors from the config.
 func SetTheme(headers, instructions, errors, defaults string) {
-	DefaultTheme.Headers = ColorMap[strings.ToLower(headers)]
-	DefaultTheme.Instructions = ColorMap[strings.ToLower(instructions)]
-	DefaultTheme.Errors = ColorMap[strings.ToLower(errors)]
-	DefaultTheme.Defaults = ColorMap[strings.ToLower(defaults)]
+	Header = ColorMap[strings.ToLower(headers)]
+	Instruction = ColorMap[strings.ToLower(instructions)]
+	Error = ColorMap[strings.ToLower(errors)]
+	Default = ColorMap[strings.ToLower(defaults)]
 }
