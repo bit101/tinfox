@@ -1,9 +1,7 @@
 // package main is the shit
 package main
 
-import (
-	"tinpig/templates"
-)
+import "github.com/bit101/tinpig2/templates"
 
 /*
 - cobra
