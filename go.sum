@@ -1,7 +1,3 @@
-github.com/bit101/go-ansi v1.5.2 h1:CiIUywKc6j3xISUpfxe/KhRcwj6zUW/RPhCPZeE7OoA=
-github.com/bit101/go-ansi v1.5.2/go.mod h1:7IFt7zupyULqKEDbOkGsDBGu+Bvzu3pYu0Ojnn7aGQQ=
-github.com/bit101/go-ansi v1.5.3 h1:RpefDX9b2j7T2PNt7ee/DQuGANMl39cLVrNyzsry2AA=
-github.com/bit101/go-ansi v1.5.3/go.mod h1:7IFt7zupyULqKEDbOkGsDBGu+Bvzu3pYu0Ojnn7aGQQ=
 github.com/bit101/go-ansi v1.5.4 h1:Agd+AzNDF0myP2T57a7usHgJRBLTFfJ26Iq/JR+Bbhg=
 github.com/bit101/go-ansi v1.5.4/go.mod h1:7IFt7zupyULqKEDbOkGsDBGu+Bvzu3pYu0Ojnn7aGQQ=
 golang.org/x/sys v0.13.0 h1:Af8nKPmuFypiUBjVoU9V20FiaFXOcuZI21p0ycVYYGE=
