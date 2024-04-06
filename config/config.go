@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bit101/tinpig2/theme"
+	"github.com/bit101/tinfox/theme"
 )
 
 // Config holds the configuration values.
@@ -27,7 +27,7 @@ type Config struct {
 func LoadConfig() Config {
 	configDir, err := os.UserConfigDir()
 	checkError(err, "could not find config dir.")
-	configPath := filepath.Join(configDir, "tinpig/config")
+	configPath := filepath.Join(configDir, "tinfox/config")
 
 	initializedConfig := false
 	_, err = os.Stat(configPath)
@@ -58,12 +58,12 @@ func LoadConfig() Config {
 }
 
 func initConfig(configDir string) {
-	err := os.Mkdir(filepath.Join(configDir, "tinpig"), 0775)
+	err := os.Mkdir(filepath.Join(configDir, "tinfox"), 0775)
 	checkError(err, "could not create new config.")
 
 	var cfg Config
 	cfg.InvalidPathChars = "‘“!#$%&+^<=>` "
-	cfg.TemplatesDir = filepath.Join(configDir, "tinpig", "templates")
+	cfg.TemplatesDir = filepath.Join(configDir, "tinfox", "templates")
 	cfg.HeaderColor = "boldgreen"
 	cfg.InstructionColor = "yellow"
 	cfg.ErrorColor = "boldred"
@@ -72,7 +72,7 @@ func initConfig(configDir string) {
 	str, err := json.MarshalIndent(cfg, "", "  ")
 	checkError(err, "could not create new config.")
 
-	os.WriteFile(filepath.Join(configDir, "tinpig", "config"), str, 0755)
+	os.WriteFile(filepath.Join(configDir, "tinfox", "config"), str, 0755)
 	os.Mkdir(cfg.TemplatesDir, 0755)
 
 	makeSampleTemplate(cfg)
@@ -87,7 +87,7 @@ func makeSampleTemplate(cfg Config) {
 	checkError(err, "could not create sample template.")
 	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "index.html"), []byte(htmlTemplate), 0755)
 	checkError(err, "could not create sample template.")
-	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "tinpig.json"), []byte(jsonTemplate), 0755)
+	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "tinfox.json"), []byte(jsonTemplate), 0755)
 	checkError(err, "could not create sample template.")
 	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "src", "main.js"), []byte(jsTemplate), 0755)
 	checkError(err, "could not create sample template.")
@@ -96,9 +96,9 @@ func makeSampleTemplate(cfg Config) {
 }
 
 func displayConfigSetupMessage(configDir string) {
-	fmt.Println("It looks like this is the first time you're using tinpig.")
-	fmt.Printf("We set up a configuration dir at %q.\n", filepath.Join(configDir, "tinpig"))
-	fmt.Printf("Add your templates to %q.\n", filepath.Join(configDir, "tinpig", "templates"))
+	fmt.Println("It looks like this is the first time you're using tinfox.")
+	fmt.Printf("We set up a configuration dir at %q.\n", filepath.Join(configDir, "tinfox"))
+	fmt.Printf("Add your templates to %q.\n", filepath.Join(configDir, "tinfox", "templates"))
 	fmt.Println("You can change this location if you'd like by editing the config file.")
 	fmt.Println("We threw in a sample HTML template there to get you started.")
 	fmt.Println()

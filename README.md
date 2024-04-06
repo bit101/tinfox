@@ -1,4 +1,4 @@
-# tinpig
+# tinfox
 
 A rewrite of https://github.com/bit101/tinpig in Go.
 

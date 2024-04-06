@@ -11,9 +11,9 @@ import (
 	"strings"
 
 	"github.com/bit101/go-ansi"
-	"github.com/bit101/tinpig2/clui"
-	"github.com/bit101/tinpig2/config"
-	"github.com/bit101/tinpig2/theme"
+	"github.com/bit101/tinfox/clui"
+	"github.com/bit101/tinfox/config"
+	"github.com/bit101/tinfox/theme"
 )
 
 // Token describes a single token.
@@ -75,6 +75,15 @@ func (t *TemplateParser) GetTemplateChoice() {
 	t.DisplayChoice()
 }
 
+// DisplayList displays the list of available templates.
+func (t *TemplateParser) DisplayList() {
+	list := t.GetTemplateList(t.cfg)
+	for _, item := range list {
+		ansi.Printf(ansi.Yellow, "%s\n", item.Name)
+		fmt.Printf("%s\n", item.Description)
+	}
+}
+
 // DisplayChoice shows info about the template the user has chosen.
 func (t *TemplateParser) DisplayChoice() {
 	fmt.Println()
@@ -103,7 +112,7 @@ func (t *TemplateParser) GetTemplateList(cfg config.Config) []*Template {
 // LoadTemplate loads, parses and returns the template.
 func (t *TemplateParser) LoadTemplate(name string, cfg config.Config) *Template {
 	templateSourceDir := filepath.Join(cfg.TemplatesDir, name)
-	templateStr, err := os.ReadFile(filepath.Join(templateSourceDir, "tinpig.json"))
+	templateStr, err := os.ReadFile(filepath.Join(templateSourceDir, "tinfox.json"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -129,8 +138,8 @@ func (t *TemplateParser) DefineTokens() {
 			tokenValues[token.Name] = value
 		}
 	}
-	tokenValues["TINPIG_PROJECT_PATH"] = t.template.ProjectDir
-	tokenValues["TINPIG_PROJECT_DIR"] = filepath.Base(t.template.ProjectDir)
+	tokenValues["tinfox_PROJECT_PATH"] = t.template.ProjectDir
+	tokenValues["tinfox_PROJECT_DIR"] = filepath.Base(t.template.ProjectDir)
 	t.template.TokenValues = tokenValues
 	fmt.Println()
 }
@@ -205,7 +214,7 @@ func (t *TemplateParser) CreateProject() {
 	}
 	os.Mkdir(t.template.ProjectDir, 0755)
 	for _, file := range templateFiles {
-		if file.Name() != "tinpig.json" {
+		if file.Name() != "tinfox.json" {
 			if !slices.Contains(t.template.Ignore, file.Name()) {
 				t.copyFile(file, t.template.TemplateSourceDir, t.template.ProjectDir)
 			}

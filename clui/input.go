@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/bit101/go-ansi"
-	"github.com/bit101/tinpig2/theme"
+	"github.com/bit101/tinfox/theme"
 )
 
 // ReadStringDefault displays a prompt and collects input.

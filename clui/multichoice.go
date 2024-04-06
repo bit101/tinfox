@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/bit101/go-ansi"
-	"github.com/bit101/tinpig2/theme"
+	"github.com/bit101/tinfox/theme"
 )
 
 // MultiChoice presents a multichoice menu
