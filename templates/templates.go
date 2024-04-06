@@ -26,6 +26,7 @@ type Template struct {
 	Name              string   `json:"name"`
 	Description       string   `json:"description"`
 	Tokens            []Token  `json:"tokens"`
+	PreMessage        string   `json:"preMessage"`
 	PostMessage       string   `json:"postMessage"`
 	Ignore            []string `json:"ignore"`
 	TemplateSourceDir string
@@ -92,8 +93,12 @@ func (t *TemplateParser) DisplayChoice() {
 		fmt.Println(t.template.Name)
 		theme.PrintInstruction("Description: ")
 		fmt.Println(t.template.Description)
-		fmt.Println()
 	}
+	if t.template.PreMessage != "" {
+		theme.PrintInstruction("Message: ")
+		fmt.Println(t.template.PreMessage)
+	}
+	fmt.Println()
 }
 
 // GetTemplateList returns the list of available templates

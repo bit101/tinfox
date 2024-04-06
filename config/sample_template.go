@@ -37,6 +37,7 @@ var jsonTemplate = `
       "default": "Hello world"
     }
   ],
-	"postMessage": "Go into the new project dir and open up 'index.html' in a browser."
+  "preMessage": "This is just a barebones HTML project.",
+ 	"postMessage": "Go into the new project dir and open up 'index.html' in a browser."
 }
 `
