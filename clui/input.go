@@ -38,7 +38,7 @@ func ReadString(prompt string) string {
 }
 
 // ReadToken displays a prompt and collects input.
-func ReadToken(prompt, defaultValue string, isPath bool) string {
+func ReadToken(prompt, defaultValue string, isRequired, isPath bool) string {
 	ok := false
 	var value string
 	for !ok {
@@ -48,9 +48,16 @@ func ReadToken(prompt, defaultValue string, isPath bool) string {
 		} else {
 			value = ReadStringDefault(prompt, defaultValue)
 		}
+		value = strings.TrimSpace(value)
+		if isRequired && value == "" {
+			theme.PrintErrorln("Value cannot be empty.")
+			ok = false
+			continue
+		}
 		if isPath {
 			if value == "" {
 				theme.PrintErrorln("Path cannot be empty.")
+				ok = false
 			}
 			for _, c := range config.ActiveConfig.InvalidPathChars {
 				if strings.Contains(value, string(c)) {
