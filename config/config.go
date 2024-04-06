@@ -12,6 +12,9 @@ import (
 	"github.com/bit101/tinfox/theme"
 )
 
+// ActiveConfig is the current config in use.
+var ActiveConfig Config
+
 // Config holds the configuration values.
 type Config struct {
 	TemplatesDir      string `json:"templatesDir"`
@@ -25,7 +28,7 @@ type Config struct {
 }
 
 // LoadConfig loads, parses and returns the app configuration.
-func LoadConfig() Config {
+func LoadConfig() {
 	configDir, err := os.UserConfigDir()
 	checkError(err, "could not find config dir.")
 	configPath := filepath.Join(configDir, "tinfox/config")
@@ -55,7 +58,7 @@ func LoadConfig() Config {
 		configuration.ErrorColor,
 		configuration.DefaultValueColor,
 	)
-	return configuration
+	ActiveConfig = configuration
 }
 
 func initConfig(configDir string) {
@@ -77,23 +80,23 @@ func initConfig(configDir string) {
 	os.WriteFile(filepath.Join(configDir, "tinfox", "config"), str, 0755)
 	os.Mkdir(cfg.TemplatesDir, 0755)
 
-	makeSampleTemplate(cfg)
+	makeSampleTemplate()
 }
 
-func makeSampleTemplate(cfg Config) {
-	err := os.Mkdir(filepath.Join(cfg.TemplatesDir, "html"), 0755)
+func makeSampleTemplate() {
+	err := os.Mkdir(filepath.Join(ActiveConfig.TemplatesDir, "html"), 0755)
 	checkError(err, "could not create sample template.")
-	err = os.Mkdir(filepath.Join(cfg.TemplatesDir, "html", "src"), 0755)
+	err = os.Mkdir(filepath.Join(ActiveConfig.TemplatesDir, "html", "src"), 0755)
 	checkError(err, "could not create sample template.")
-	err = os.Mkdir(filepath.Join(cfg.TemplatesDir, "html", "styles"), 0755)
+	err = os.Mkdir(filepath.Join(ActiveConfig.TemplatesDir, "html", "styles"), 0755)
 	checkError(err, "could not create sample template.")
-	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "index.html"), []byte(htmlTemplate), 0755)
+	err = os.WriteFile(filepath.Join(ActiveConfig.TemplatesDir, "html", "index.html"), []byte(htmlTemplate), 0755)
 	checkError(err, "could not create sample template.")
-	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "template.json"), []byte(jsonTemplate), 0755)
+	err = os.WriteFile(filepath.Join(ActiveConfig.TemplatesDir, "html", "template.json"), []byte(jsonTemplate), 0755)
 	checkError(err, "could not create sample template.")
-	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "src", "main.js"), []byte(jsTemplate), 0755)
+	err = os.WriteFile(filepath.Join(ActiveConfig.TemplatesDir, "html", "src", "main.js"), []byte(jsTemplate), 0755)
 	checkError(err, "could not create sample template.")
-	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "styles", "main.css"), []byte(cssTemplate), 0755)
+	err = os.WriteFile(filepath.Join(ActiveConfig.TemplatesDir, "html", "styles", "main.css"), []byte(cssTemplate), 0755)
 	checkError(err, "could not create sample template.")
 }
 

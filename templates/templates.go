@@ -38,15 +38,12 @@ type Template struct {
 // TemplateParser reads and parses a template.
 type TemplateParser struct {
 	template *Template
-	cfg      config.Config
 }
 
 // NewTemplateParser creates a new TemplateParser.
 func NewTemplateParser() *TemplateParser {
-	cfg := config.LoadConfig()
-	return &TemplateParser{
-		cfg: cfg,
-	}
+	config.LoadConfig()
+	return &TemplateParser{}
 }
 
 // LoadAndParse loads the template list, gets the user's choice, dir, tokens values and creates the project.
@@ -60,10 +57,10 @@ func (t *TemplateParser) LoadAndParse() {
 
 // GetTemplateChoice shows the template ui and returns the choice.
 func (t *TemplateParser) GetTemplateChoice() {
-	list := t.GetTemplateList(t.cfg)
+	list := t.GetTemplateList()
 	if len(list) == 0 {
 		theme.PrintErrorln("No templates found.")
-		fmt.Printf("  Add some templates in %q.\n", t.cfg.TemplatesDir)
+		fmt.Printf("  Add some templates in %q.\n", config.ActiveConfig.TemplatesDir)
 		fmt.Println("  Or adjust the `templatesDir` location in the config file.")
 		os.Exit(1)
 	}
@@ -78,7 +75,7 @@ func (t *TemplateParser) GetTemplateChoice() {
 
 // DisplayList displays the list of available templates.
 func (t *TemplateParser) DisplayList() {
-	list := t.GetTemplateList(t.cfg)
+	list := t.GetTemplateList()
 	for _, item := range list {
 		theme.PrintInstructionf("%s\n", item.Name)
 		fmt.Printf("  %s\n", item.Description)
@@ -87,7 +84,7 @@ func (t *TemplateParser) DisplayList() {
 
 // DisplayChoice shows info about the template the user has chosen.
 func (t *TemplateParser) DisplayChoice() {
-	if t.cfg.Verbose {
+	if config.ActiveConfig.Verbose {
 		fmt.Println()
 		theme.PrintHeaderln("Project Info:")
 		theme.PrintInstruction("Project: ")
@@ -103,22 +100,22 @@ func (t *TemplateParser) DisplayChoice() {
 }
 
 // GetTemplateList returns the list of available templates
-func (t *TemplateParser) GetTemplateList(cfg config.Config) []*Template {
-	dirList, err := os.ReadDir(cfg.TemplatesDir)
+func (t *TemplateParser) GetTemplateList() []*Template {
+	dirList, err := os.ReadDir(config.ActiveConfig.TemplatesDir)
 	if err != nil {
 		log.Fatal(err)
 	}
 	list := []*Template{}
 	for _, d := range dirList {
-		template := t.LoadTemplate(d.Name(), cfg)
+		template := t.LoadTemplate(d.Name())
 		list = append(list, template)
 	}
 	return list
 }
 
 // LoadTemplate loads, parses and returns the template.
-func (t *TemplateParser) LoadTemplate(name string, cfg config.Config) *Template {
-	templateSourceDir := filepath.Join(cfg.TemplatesDir, name)
+func (t *TemplateParser) LoadTemplate(name string) *Template {
+	templateSourceDir := filepath.Join(config.ActiveConfig.TemplatesDir, name)
 	templateStr, err := os.ReadFile(filepath.Join(templateSourceDir, "template.json"))
 	if err != nil {
 		log.Fatal(err)
@@ -134,12 +131,12 @@ func (t *TemplateParser) DefineTokens() {
 	if len(t.template.Tokens) == 0 {
 		return
 	}
-	if t.cfg.Verbose {
+	if config.ActiveConfig.Verbose {
 		theme.PrintHeaderln("Define values for any tokens:")
 	}
 	tokenValues := map[string]string{}
 	for _, token := range t.template.Tokens {
-		value := clui.ReadToken(token.Name, token.Default, token.IsPath, t.cfg)
+		value := clui.ReadToken(token.Name, token.Default, token.IsPath)
 		tokenValues[token.Name] = value
 	}
 	tokenValues["PROJECT_PATH"] = t.template.ProjectDir
@@ -154,7 +151,7 @@ func (t *TemplateParser) GetProjectDir() {
 	ok := false
 	for !ok {
 		ok = true
-		if t.cfg.Verbose {
+		if config.ActiveConfig.Verbose {
 			theme.PrintHeaderln("Project Location: ")
 		}
 		dir = clui.ReadString("Directory to create project in:")
@@ -168,7 +165,7 @@ func (t *TemplateParser) GetProjectDir() {
 		}
 
 		// bad path chars?
-		for _, c := range t.cfg.InvalidPathChars {
+		for _, c := range config.ActiveConfig.InvalidPathChars {
 			if strings.Index(dir, string(c)) > -1 {
 				ok = false
 				theme.PrintErrorf("Directory name cannot contain %q. Try again.\n\n", c)
@@ -178,7 +175,7 @@ func (t *TemplateParser) GetProjectDir() {
 			continue
 		}
 
-		if t.cfg.Verbose {
+		if config.ActiveConfig.Verbose {
 			// let's make sure that's what you wanted
 			absDir, _ := filepath.Abs(dir)
 			theme.PrintInstruction("You entered: ")

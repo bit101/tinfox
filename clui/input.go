@@ -38,7 +38,7 @@ func ReadString(prompt string) string {
 }
 
 // ReadToken displays a prompt and collects input.
-func ReadToken(prompt, defaultValue string, isPath bool, cfg config.Config) string {
+func ReadToken(prompt, defaultValue string, isPath bool) string {
 	ok := false
 	var value string
 	for !ok {
@@ -52,7 +52,7 @@ func ReadToken(prompt, defaultValue string, isPath bool, cfg config.Config) stri
 			if value == "" {
 				theme.PrintErrorln("Path cannot be empty.")
 			}
-			for _, c := range cfg.InvalidPathChars {
+			for _, c := range config.ActiveConfig.InvalidPathChars {
 				if strings.Contains(value, string(c)) {
 					theme.PrintErrorf("Path cannot contain %q\n", string(c))
 					ok = false
