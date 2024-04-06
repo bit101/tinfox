@@ -88,24 +88,34 @@ Coming soon. For now, https://github.com/bit101/tinpig/wiki/Tinpig-Template-Guid
 
 ## Differences from tinpig
 
-- tinpig has an interactive configuration function that asks for a user name and email address. These values can be used in templates, but mostly are not and can be set up as tokens in templates in the case they are needed. They have been removed in tinfox. There is no configuration function. A default config is created and it can be edited manually. tinpig also had a reset command to reset the configuration. This does not exist in tinfox.
+### Removed, not coming back: 
+
+- tinpig has special user name and email configuration values. These can be used in templates, but mostly are not and can be set up as tokens in templates in the case they are needed. They have been removed in tinfox.
+
+- tinpig has a configuration function that walks you through configuration, and a config reset function. These have been removed in tinfox. A sensible default config is created and it can be edited manually. 
+
+- tinpig allows you to create a project in an existing directory, even if that directory is not empty. It gives a warning and will not overwrite any existing files. tinfox just disallows the use of an existing directory.
+
+### Not yet, but probably coming soon:
 
 - tinpig allows you to specify a template and path on the command line. In general it's just easier to choose a template from a list and enter the path when prompted. So this did not carry over to tinfox. These could be useful in scripting or setting up shortcuts though, so it may come back.
 
-- tinpig allows you to create a project in an existing directory, even if it was not empty. It would give a warning and would not overwrite any existing files. tinfox just disallows the use of an existing directory.
-
 - tinpig allows for setting a temporary template directory when calling the command. tinfox does not have that functionality, but may have more advanced template management in the future.
 
-- tinpig does not have the `verbose` feature added in tinfox.
-
 - tinpig came with more built-in templates. tinfox only has one sample template.
+
+### New in tinfox, not in tinpig:
+
+- tinfox added the `verbose` setting.
+
+- tinfox added customizable colors.
 
 ### Template Differences
 
 tinfox uses almost the exact same template format as tinpig. The only differences:
 
 - tinpig uses a `tinpig.json` manifest file whereas tinfox uses `tinfox.json`
-- tinpig has `preMessage` and `postMessage`. tinfox currently only has `postMessage`. But `preMessage` will probably be added.
+- tinpig has `preMessage` and `postMessage`. tinfox currently only has `postMessage`. But `preMessage` will probably be added..
 - tinpig tokens have an `isPath` property. If a token is a path, it will be checked against invalid path chars when entered. tinfox does not do this (yet).
 - Special tokens:
     - `TINPIG_USER_NAME` and `TINPIG_USER_EMAIL` do not exist in tinfox as the user name and email have been removed from config.
