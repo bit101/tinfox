@@ -138,8 +138,8 @@ func (t *TemplateParser) DefineTokens() {
 			tokenValues[token.Name] = value
 		}
 	}
-	tokenValues["tinfox_PROJECT_PATH"] = t.template.ProjectDir
-	tokenValues["tinfox_PROJECT_DIR"] = filepath.Base(t.template.ProjectDir)
+	tokenValues["TINFOX_PROJECT_PATH"] = t.template.ProjectDir
+	tokenValues["TINFOX_PROJECT_DIR"] = filepath.Base(t.template.ProjectDir)
 	t.template.TokenValues = tokenValues
 	fmt.Println()
 }
