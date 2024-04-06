@@ -115,7 +115,6 @@ Coming soon. For now, https://github.com/bit101/tinpig/wiki/Tinpig-Template-Guid
 tinfox uses almost the exact same template format as tinpig. The only differences:
 
 - tinpig uses a `tinpig.json` manifest file whereas tinfox uses `template.json`
-- tinpig tokens have an `isPath` property. If a token is a path, it will be checked against invalid path chars when entered. tinfox does not do this (yet).
 - Special tokens:
     - `TINPIG_USER_NAME` and `TINPIG_USER_EMAIL` do not exist in tinfox as the user name and email have been removed from config.
     - `TINPIG_PROJECT_PATH` has become `PROJECT_PATH`
@@ -128,10 +127,9 @@ tinpig was created with node.js and uses several third party libraries from npm.
 I've been personally using tinpig for years and other than a recent dependency upgrade have not really touched the code in a long, long time. When I started porting it over, I was actually pretty impressed about how much functionality I'd given it initially and how well it all just worked. The port took more work than I expected and there's still stuff to be moved over. But it is functionally working now at least.
 
 ## TODO
-- Check path for `isPath` tokens.
+- Include more default templates.
 - Allow user to enter template on command line.
 - Allow user to enter project path on command line.
 - Allow use of alternate template directory.
 - Additional template management features (template categories maybe).
 - A verbose flag that overrides the configuration setting.
-- Include more default templates.
