@@ -19,6 +19,7 @@ import (
 type Token struct {
 	Name    string `json:"name"`
 	Default string `json:"default"`
+	IsPath  bool   `json:"isPath"`
 }
 
 // Template is a struct holding template data.
@@ -138,13 +139,8 @@ func (t *TemplateParser) DefineTokens() {
 	}
 	tokenValues := map[string]string{}
 	for _, token := range t.template.Tokens {
-		if token.Default == "" {
-			value := clui.ReadString(fmt.Sprintf("Value for %q:", token.Name))
-			tokenValues[token.Name] = value
-		} else {
-			value := clui.ReadStringDefault(fmt.Sprintf("Value for %q:", token.Name), token.Default)
-			tokenValues[token.Name] = value
-		}
+		value := clui.ReadToken(token.Name, token.Default, token.IsPath, t.cfg)
+		tokenValues[token.Name] = value
 	}
 	tokenValues["PROJECT_PATH"] = t.template.ProjectDir
 	tokenValues["PROJECT_DIR"] = filepath.Base(t.template.ProjectDir)

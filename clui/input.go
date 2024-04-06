@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/bit101/go-ansi"
+	"github.com/bit101/tinfox/config"
 	"github.com/bit101/tinfox/theme"
 )
 
@@ -34,4 +35,31 @@ func ReadString(prompt string) string {
 		return ""
 	}
 	return strings.TrimSuffix(str, "\n")
+}
+
+// ReadToken displays a prompt and collects input.
+func ReadToken(prompt, defaultValue string, isPath bool, cfg config.Config) string {
+	ok := false
+	var value string
+	for !ok {
+		ok = true
+		if defaultValue == "" {
+			value = ReadString(prompt)
+		} else {
+			value = ReadStringDefault(prompt, defaultValue)
+		}
+		if isPath {
+			if value == "" {
+				theme.PrintErrorln("Path cannot be empty.")
+			}
+			for _, c := range cfg.InvalidPathChars {
+				if strings.Contains(value, string(c)) {
+					theme.PrintErrorf("Path cannot contain %q\n", string(c))
+					ok = false
+					break
+				}
+			}
+		}
+	}
+	return value
 }
