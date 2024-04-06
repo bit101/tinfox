@@ -20,6 +20,7 @@ type Config struct {
 	InstructionColor  string `json:"instructionColor"`
 	ErrorColor        string `json:"errorColor"`
 	DefaultValueColor string `json:"defaultValueColor"`
+	Verbose           bool   `json:"verbose"`
 	ConfigDir         string `json:"-"`
 }
 
@@ -68,6 +69,7 @@ func initConfig(configDir string) {
 	cfg.InstructionColor = "yellow"
 	cfg.ErrorColor = "boldred"
 	cfg.DefaultValueColor = "blue"
+	cfg.Verbose = true
 
 	str, err := json.MarshalIndent(cfg, "", "  ")
 	checkError(err, "could not create new config.")

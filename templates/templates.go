@@ -80,19 +80,21 @@ func (t *TemplateParser) DisplayList() {
 	list := t.GetTemplateList(t.cfg)
 	for _, item := range list {
 		ansi.Printf(ansi.Yellow, "%s\n", item.Name)
-		fmt.Printf("%s\n", item.Description)
+		fmt.Printf("  %s\n", item.Description)
 	}
 }
 
 // DisplayChoice shows info about the template the user has chosen.
 func (t *TemplateParser) DisplayChoice() {
-	fmt.Println()
-	ansi.Println(theme.Header, "Project Info:")
-	ansi.Print(theme.Instruction, "Project: ")
-	fmt.Println(t.template.Name)
-	ansi.Print(theme.Instruction, "Description: ")
-	fmt.Println(t.template.Description)
-	fmt.Println()
+	if t.cfg.Verbose {
+		fmt.Println()
+		ansi.Println(theme.Header, "Project Info:")
+		ansi.Print(theme.Instruction, "Project: ")
+		fmt.Println(t.template.Name)
+		ansi.Print(theme.Instruction, "Description: ")
+		fmt.Println(t.template.Description)
+		fmt.Println()
+	}
 }
 
 // GetTemplateList returns the list of available templates
@@ -127,7 +129,9 @@ func (t *TemplateParser) DefineTokens() {
 	if len(t.template.Tokens) == 0 {
 		return
 	}
-	ansi.Println(theme.Header, "Define values for any tokens:")
+	if t.cfg.Verbose {
+		ansi.Println(theme.Header, "Define values for any tokens:")
+	}
 	tokenValues := map[string]string{}
 	for _, token := range t.template.Tokens {
 		if token.Default == "" {
@@ -150,7 +154,9 @@ func (t *TemplateParser) GetProjectDir() {
 	ok := false
 	for !ok {
 		ok = true
-		ansi.Println(theme.Header, "Project Location: ")
+		if t.cfg.Verbose {
+			ansi.Println(theme.Header, "Project Location: ")
+		}
 		dir = clui.ReadString("Directory to create project in:")
 
 		// is it an empty string?
@@ -170,14 +176,16 @@ func (t *TemplateParser) GetProjectDir() {
 			}
 		}
 
-		// let's make sure that's what you wanted
-		absDir, _ := filepath.Abs(dir)
-		ansi.Print(theme.Instruction, "You entered: ")
-		fmt.Println(absDir)
-		confirm := clui.ReadString("Is that correct? [y/n]")
-		if strings.ToLower(confirm) != "y" {
-			ok = false
-			continue
+		if t.cfg.Verbose {
+			// let's make sure that's what you wanted
+			absDir, _ := filepath.Abs(dir)
+			ansi.Print(theme.Instruction, "You entered: ")
+			fmt.Println(absDir)
+			confirm := clui.ReadString("Is that correct? [y/n]")
+			if strings.ToLower(confirm) != "y" {
+				ok = false
+				continue
+			}
 		}
 
 		// does this path already exist?
