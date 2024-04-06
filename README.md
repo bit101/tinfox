@@ -128,6 +128,7 @@ tinpig was created with node.js and uses several third party libraries from npm.
 I've been personally using tinpig for years and other than a recent dependency upgrade have not really touched the code in a long, long time. When I started porting it over, I was actually pretty impressed about how much functionality I'd given it initially and how well it all just worked. The port took more work than I expected and there's still stuff to be moved over. But it is functionally working now at least.
 
 ## TODO
+- Create wiki with full info. Move readme to that.
 - Allow user to enter template on command line.
 - Allow user to enter project path on command line.
 - Allow use of alternate template directory.
