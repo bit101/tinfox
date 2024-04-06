@@ -114,12 +114,12 @@ Coming soon. For now, https://github.com/bit101/tinpig/wiki/Tinpig-Template-Guid
 
 tinfox uses almost the exact same template format as tinpig. The only differences:
 
-- tinpig uses a `tinpig.json` manifest file whereas tinfox uses `tinfox.json`
+- tinpig uses a `tinpig.json` manifest file whereas tinfox uses `template.json`
 - tinpig tokens have an `isPath` property. If a token is a path, it will be checked against invalid path chars when entered. tinfox does not do this (yet).
 - Special tokens:
     - `TINPIG_USER_NAME` and `TINPIG_USER_EMAIL` do not exist in tinfox as the user name and email have been removed from config.
-    - `TINPIG_PROJECT_PATH` has become `TINFOX_PROJECT_PATH`
-    - `TINPIG_PROJECT_DIR` has become `TINFOX_PROJECT_DIR`
+    - `TINPIG_PROJECT_PATH` has become `PROJECT_PATH`
+    - `TINPIG_PROJECT_DIR` has become `PROJECT_DIR`
 
 ## Why the change from tinpig?
 

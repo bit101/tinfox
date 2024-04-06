@@ -89,7 +89,7 @@ func makeSampleTemplate(cfg Config) {
 	checkError(err, "could not create sample template.")
 	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "index.html"), []byte(htmlTemplate), 0755)
 	checkError(err, "could not create sample template.")
-	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "tinfox.json"), []byte(jsonTemplate), 0755)
+	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "template.json"), []byte(jsonTemplate), 0755)
 	checkError(err, "could not create sample template.")
 	err = os.WriteFile(filepath.Join(cfg.TemplatesDir, "html", "src", "main.js"), []byte(jsTemplate), 0755)
 	checkError(err, "could not create sample template.")

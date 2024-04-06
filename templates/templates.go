@@ -118,7 +118,7 @@ func (t *TemplateParser) GetTemplateList(cfg config.Config) []*Template {
 // LoadTemplate loads, parses and returns the template.
 func (t *TemplateParser) LoadTemplate(name string, cfg config.Config) *Template {
 	templateSourceDir := filepath.Join(cfg.TemplatesDir, name)
-	templateStr, err := os.ReadFile(filepath.Join(templateSourceDir, "tinfox.json"))
+	templateStr, err := os.ReadFile(filepath.Join(templateSourceDir, "template.json"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -146,8 +146,8 @@ func (t *TemplateParser) DefineTokens() {
 			tokenValues[token.Name] = value
 		}
 	}
-	tokenValues["TINFOX_PROJECT_PATH"] = t.template.ProjectDir
-	tokenValues["TINFOX_PROJECT_DIR"] = filepath.Base(t.template.ProjectDir)
+	tokenValues["PROJECT_PATH"] = t.template.ProjectDir
+	tokenValues["PROJECT_DIR"] = filepath.Base(t.template.ProjectDir)
 	t.template.TokenValues = tokenValues
 	fmt.Println()
 }
@@ -228,7 +228,7 @@ func (t *TemplateParser) CreateProject() {
 	}
 	os.Mkdir(t.template.ProjectDir, 0755)
 	for _, file := range templateFiles {
-		if file.Name() != "tinfox.json" {
+		if file.Name() != "template.json" {
 			if !slices.Contains(t.template.Ignore, file.Name()) {
 				t.copyFile(file, t.template.TemplateSourceDir, t.template.ProjectDir)
 			}
