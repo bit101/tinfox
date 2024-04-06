@@ -10,7 +10,6 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/bit101/go-ansi"
 	"github.com/bit101/tinfox/clui"
 	"github.com/bit101/tinfox/config"
 	"github.com/bit101/tinfox/theme"
@@ -61,7 +60,7 @@ func (t *TemplateParser) LoadAndParse() {
 func (t *TemplateParser) GetTemplateChoice() {
 	list := t.GetTemplateList(t.cfg)
 	if len(list) == 0 {
-		ansi.Println(theme.Error, "No templates found.")
+		theme.PrintErrorln("No templates found.")
 		fmt.Printf("  Add some templates in %q.\n", t.cfg.TemplatesDir)
 		fmt.Println("  Or adjust the `templatesDir` location in the config file.")
 		os.Exit(1)
@@ -79,7 +78,7 @@ func (t *TemplateParser) GetTemplateChoice() {
 func (t *TemplateParser) DisplayList() {
 	list := t.GetTemplateList(t.cfg)
 	for _, item := range list {
-		ansi.Printf(ansi.Yellow, "%s\n", item.Name)
+		theme.PrintInstructionf("%s\n", item.Name)
 		fmt.Printf("  %s\n", item.Description)
 	}
 }
@@ -88,10 +87,10 @@ func (t *TemplateParser) DisplayList() {
 func (t *TemplateParser) DisplayChoice() {
 	if t.cfg.Verbose {
 		fmt.Println()
-		ansi.Println(theme.Header, "Project Info:")
-		ansi.Print(theme.Instruction, "Project: ")
+		theme.PrintHeaderln("Project Info:")
+		theme.PrintInstruction("Project: ")
 		fmt.Println(t.template.Name)
-		ansi.Print(theme.Instruction, "Description: ")
+		theme.PrintInstruction("Description: ")
 		fmt.Println(t.template.Description)
 		fmt.Println()
 	}
@@ -130,7 +129,7 @@ func (t *TemplateParser) DefineTokens() {
 		return
 	}
 	if t.cfg.Verbose {
-		ansi.Println(theme.Header, "Define values for any tokens:")
+		theme.PrintHeaderln("Define values for any tokens:")
 	}
 	tokenValues := map[string]string{}
 	for _, token := range t.template.Tokens {
@@ -155,14 +154,14 @@ func (t *TemplateParser) GetProjectDir() {
 	for !ok {
 		ok = true
 		if t.cfg.Verbose {
-			ansi.Println(theme.Header, "Project Location: ")
+			theme.PrintHeaderln("Project Location: ")
 		}
 		dir = clui.ReadString("Directory to create project in:")
 
 		// is it an empty string?
 		if dir == "" {
 			ok = false
-			ansi.Println(theme.Error, "Directory name cannot be empty.")
+			theme.PrintErrorln("Directory name cannot be empty.")
 			fmt.Println()
 			continue
 		}
@@ -171,15 +170,17 @@ func (t *TemplateParser) GetProjectDir() {
 		for _, c := range t.cfg.InvalidPathChars {
 			if strings.Index(dir, string(c)) > -1 {
 				ok = false
-				ansi.Printf(theme.Error, "Directory name cannot contain %q. Try again.\n\n", c)
-				continue
+				theme.PrintErrorf("Directory name cannot contain %q. Try again.\n\n", c)
 			}
+		}
+		if !ok {
+			continue
 		}
 
 		if t.cfg.Verbose {
 			// let's make sure that's what you wanted
 			absDir, _ := filepath.Abs(dir)
-			ansi.Print(theme.Instruction, "You entered: ")
+			theme.PrintInstruction("You entered: ")
 			fmt.Println(absDir)
 			confirm := clui.ReadString("Is that correct? [y/n]")
 			if strings.ToLower(confirm) != "y" {
@@ -191,7 +192,7 @@ func (t *TemplateParser) GetProjectDir() {
 		// does this path already exist?
 		_, err := os.Stat(dir)
 		if err == nil {
-			ansi.Printf(theme.Error, "Something already exists at location %q. Try again.\n\n", dir)
+			theme.PrintErrorf("Something already exists at location %q. Try again.\n\n", dir)
 			ok = false
 			continue
 		}
@@ -204,11 +205,11 @@ func (t *TemplateParser) GetProjectDir() {
 
 // ShowSuccess shows the success message and any post message.
 func (t *TemplateParser) ShowSuccess() {
-	ansi.Printf(theme.Header, "Success creating the %q project!\n", t.template.Name)
-	ansi.Print(theme.Instruction, "Location: ")
+	theme.PrintHeaderf("Success creating the %q project!\n", t.template.Name)
+	theme.PrintInstruction("Location: ")
 	fmt.Println(t.template.ProjectDir)
 	if t.template.PostMessage != "" {
-		ansi.Print(theme.Instruction, "Instructions: ")
+		theme.PrintInstruction("Instructions: ")
 		fmt.Println(t.template.PostMessage)
 	}
 	fmt.Println()
