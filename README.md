@@ -120,5 +120,5 @@ tinfox uses almost the exact same template format as tinpig. The only difference
 - Allow user to enter project path on command line.
 - Allow use of alternate template directory.
 - Additional template management features (template categories maybe).
-- A verbose flag that overrides the 
+- A verbose flag that overrides the configuration setting.
 - Include more default templates.
