@@ -8,7 +8,8 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"tinpig/theme"
+
+	"github.com/bit101/tinpig2/theme"
 )
 
 // Config holds the configuration values.

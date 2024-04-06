@@ -7,9 +7,9 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"tinpig/theme"
 
 	"github.com/bit101/go-ansi"
+	"github.com/bit101/tinpig2/theme"
 )
 
 // MultiChoice presents a multichoice menu

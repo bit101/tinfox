@@ -9,11 +9,11 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
-	"tinpig/clui"
-	"tinpig/config"
-	"tinpig/theme"
 
 	"github.com/bit101/go-ansi"
+	"github.com/bit101/tinpig2/clui"
+	"github.com/bit101/tinpig2/config"
+	"github.com/bit101/tinpig2/theme"
 )
 
 // Token describes a single token.

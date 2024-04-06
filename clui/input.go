@@ -5,9 +5,9 @@ import (
 	"bufio"
 	"os"
 	"strings"
-	"tinpig/theme"
 
 	"github.com/bit101/go-ansi"
+	"github.com/bit101/tinpig2/theme"
 )
 
 // ReadStringDefault displays a prompt and collects input.
