@@ -96,13 +96,14 @@ Coming soon. For now, https://github.com/bit101/tinpig/wiki/Tinpig-Template-Guid
 
 - tinpig allows you to create a project in an existing directory, even if that directory is not empty. It gives a warning and will not overwrite any existing files. tinfox just disallows the use of an existing directory.
 
+- tinpig came with more built-in templates. tinfox only has one sample template. https://github.com/bit101/tinfox-templates provides additional samples which you can copy or use as inspiration.
+
 ### Not yet, but probably coming soon:
 
 - tinpig allows you to specify a template and path on the command line. In general it's just easier to choose a template from a list and enter the path when prompted. So this did not carry over to tinfox. These could be useful in scripting or setting up shortcuts though, so it may come back.
 
 - tinpig allows for setting a temporary template directory when calling the command. tinfox does not have that functionality, but may have more advanced template management in the future.
 
-- tinpig came with more built-in templates. tinfox only has one sample template.
 
 ### New in tinfox, not in tinpig:
 
@@ -127,9 +128,7 @@ tinpig was created with node.js and uses several third party libraries from npm.
 I've been personally using tinpig for years and other than a recent dependency upgrade have not really touched the code in a long, long time. When I started porting it over, I was actually pretty impressed about how much functionality I'd given it initially and how well it all just worked. The port took more work than I expected and there's still stuff to be moved over. But it is functionally working now at least.
 
 ## TODO
-- Include more default templates.
 - Allow user to enter template on command line.
 - Allow user to enter project path on command line.
 - Allow use of alternate template directory.
 - Additional template management features (template categories maybe).
-- A verbose flag that overrides the configuration setting.
