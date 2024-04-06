@@ -112,6 +112,11 @@ tinfox uses almost the exact same template format as tinpig. The only difference
     - `TINPIG_PROJECT_PATH` has become `TINFOX_PROJECT_PATH`
     - `TINPIG_PROJECT_DIR` has become `TINFOX_PROJECT_DIR`
 
+## Why the change from tinpig?
+
+tinpig was created with node.js and uses several third party libraries from npm. I'm not super comfortable with node and npm these days, but I constantly have my hands on Go. I've made a number of other tools and libraries in Go and have wanted to pull over tinpig's templated project creation functionality to Go for a long time. So here it is.
+
+I've been personally using tinpig for years and other than a recent dependency upgrade have not really touched the code in a long, long time. When I started porting it over, I was actually pretty impressed about how much functionality I'd given it initially and how well it all just worked. The port took more work than I expected and there's still stuff to be moved over. But it is functionally working now at least.
 
 ## TODO
 - Check path for `isPath` tokens.
