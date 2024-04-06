@@ -107,23 +107,25 @@ func (t *TemplateParser) GetTemplateList() []*Template {
 	}
 	list := []*Template{}
 	for _, d := range dirList {
-		template := t.LoadTemplate(d.Name())
-		list = append(list, template)
+		template, err := t.LoadTemplate(d.Name())
+		if err == nil {
+			list = append(list, template)
+		}
 	}
 	return list
 }
 
 // LoadTemplate loads, parses and returns the template.
-func (t *TemplateParser) LoadTemplate(name string) *Template {
+func (t *TemplateParser) LoadTemplate(name string) (*Template, error) {
 	templateSourceDir := filepath.Join(config.ActiveConfig.TemplatesDir, name)
 	templateStr, err := os.ReadFile(filepath.Join(templateSourceDir, "template.json"))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	var template Template
 	json.Unmarshal(templateStr, &template)
 	template.TemplateSourceDir = templateSourceDir
-	return &template
+	return &template, nil
 }
 
 // DefineTokens gets values for all the tokens and stores the values in the template.
