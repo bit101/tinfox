@@ -115,7 +115,6 @@ Coming soon. For now, https://github.com/bit101/tinpig/wiki/Tinpig-Template-Guid
 tinfox uses almost the exact same template format as tinpig. The only differences:
 
 - tinpig uses a `tinpig.json` manifest file whereas tinfox uses `tinfox.json`
-- tinpig has `preMessage` and `postMessage`. tinfox currently only has `postMessage`. But `preMessage` will probably be added..
 - tinpig tokens have an `isPath` property. If a token is a path, it will be checked against invalid path chars when entered. tinfox does not do this (yet).
 - Special tokens:
     - `TINPIG_USER_NAME` and `TINPIG_USER_EMAIL` do not exist in tinfox as the user name and email have been removed from config.
@@ -130,7 +129,6 @@ I've been personally using tinpig for years and other than a recent dependency u
 
 ## TODO
 - Check path for `isPath` tokens.
-- Implement `preMessage`.
 - Allow user to enter template on command line.
 - Allow user to enter project path on command line.
 - Allow use of alternate template directory.
