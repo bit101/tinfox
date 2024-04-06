@@ -66,6 +66,7 @@ The `verbose` value determines how much information is shown while prompting you
 
 ## Templates
 
+Coming soon. For now, https://github.com/bit101/tinpig/wiki/Tinpig-Template-Guide mostly applies, with the changes listed below.
 
 
 ## Differences from tinpig
