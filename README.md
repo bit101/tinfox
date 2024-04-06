@@ -52,7 +52,24 @@ The `templatesDir` value will be slightly different based on your OS and user na
 
 The `invalidPathChars` value determines which characters will not be accepted when prompting the user for a path. Note that `<`, `=` and `>` have been rendered in unicode. Also note that the space character is included. If you want to be able to specify path names with spaces, you can remove that, but it may very well cause problems. 
 
-The next four values specify colors that will be used in prompts. These are pretty obvious, but can be changed to suit your tastes or terminal theme.
+The next four values specify colors that will be used in prompts. These are pretty obvious, but can be changed to suit your tastes or terminal theme. Available colors are listed below. They are NOT case sensitive, so "boldred", "Boldred", "BoldRed" or "BOLDRED", etc. are all the same.
+
+- "black"
+- "boldblack"
+- "red"
+- "boldred"
+- "green"
+- "boldgreen"
+- "yellow"
+- "boldyellow"
+- "blue"
+- "boldblue"
+- "purple"
+- "boldpurple"
+- "cyan"
+- "boldcyan"
+- "white"
+- "boldwhite"
 
 The `verbose` value determines how much information is shown while prompting your for values and setting up your project. Expert users may be comfortable with setting this to false.
 
