@@ -183,9 +183,11 @@ func (t *TemplateParser) GetProjectDir() {
 			absDir, _ := filepath.Abs(dir)
 			theme.PrintInstruction("You entered: ")
 			fmt.Println(absDir)
-			confirm := clui.ReadString("Is that correct? [y/n]")
-			if strings.ToLower(confirm) != "y" {
+			confirm := clui.ReadString("Is that correct? [Y/n]")
+			confirm = strings.ToLower(confirm)
+			if confirm != "" && confirm != "y" {
 				ok = false
+				theme.PrintErrorln("OK, let's try again.")
 				continue
 			}
 		}
